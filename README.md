@@ -10,4 +10,6 @@ This program should be executed from the command line, in the following manner:
 
 `node download_avatars.js jquery jquery`
 
-... (whatever else you'd like to include)
+## Set up
+
+Clone repository to your local directory and run 'npm install' from command line.
