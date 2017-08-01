@@ -16,24 +16,28 @@ const USER_AGENT = { 'User-Agent': 'MattWillcox' };
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
-function downloadImageByURL(url, filePath) {
+function countRepos(list) {
+  list.forEach(function(index){
+    request({ url: index,
+    headers: USER_AGENT
+    }, function(err, response, body) {
+      if (err) {
+        throw err;
+      }
 
-  if(!fs.existsSync('./avatars/')){
-    console.log("Missing ./avatars folder");
-    process.exit();
-  }
+    console.log(JSON.parse(body));
 
-  request(url, function(err, response, body) {
-    if (err) {
-      throw err;
-    }
-  }).pipe(fs.createWriteStream('./avatars/' + filePath + '.jpg'));
+    })
+  };
 }
 
-function findAvatar(data){
+function findRepos(data){
+  var urlArray = [];
   data.forEach(function(cont){
-    downloadImageByURL(cont.avatar_url, cont.login);
+    urlArray.push(cont.starred_url.slice(0, -15));
   });
+  countRepos(urlArray);
+
 }
 
 function getRepoContributors(repoOwner, repoName, cb) {
@@ -58,4 +62,4 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
 (!args[0] || !args[1] || args.length > 2) ?
   console.log("Error, Incorrect Command Line Arguments. \nPlease enter: node download_avatars.js <owner> <repo>")
-  : getRepoContributors(args[0], args[1], findAvatar);
+  : getRepoContributors(args[0], args[1], findRepos);
